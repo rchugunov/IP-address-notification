@@ -23,6 +23,10 @@
             android:name=".ForegroundService"
             android:enabled="true"
             android:exported="false" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabric.key}" />
     </application>
 
 </manifest>

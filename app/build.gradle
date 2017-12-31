@@ -1,4 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 android {
     compileSdkVersion 26
@@ -9,6 +15,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        Properties localProps = new Properties()
+        localProps.load(new FileInputStream(file('../local.properties')))
+        manifestPlaceholders(["fabric.key" : localProps.getProperty("fabric.key")])
+        resValue("string", "com.zendesk.sdk.url", localProps.getProperty("com.zendesk.sdk.url"))
+        resValue("string", "com.zendesk.sdk.identifier", localProps.getProperty("com.zendesk.sdk.identifier"))
+        resValue("string", "com.zendesk.sdk.clientIdentifier", localProps.getProperty("com.zendesk.sdk.clientIdentifier"))
     }
     buildTypes {
         release {
@@ -25,4 +37,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    compile('com.zendesk:sdk:1.11.0.1@aar') {
+        transitive = true
+    }
+    compile('io.fabric.sdk.android:fabric:1.4.1@aar') {
+        transitive = true
+    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
 }
