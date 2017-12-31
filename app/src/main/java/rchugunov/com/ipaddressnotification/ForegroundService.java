@@ -52,13 +52,14 @@ public class ForegroundService extends Service {
     public void onCreate() {
         super.onCreate();
         receiver = new ConnectivityChangedBroadcastReceiver();
+        registerReceiver(receiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         startForeground(NOTIFICATION_ID, buildNotification(intent.getStringExtra(ForegroundService.IP_ADDRESS)));
-        registerReceiver(receiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         return START_STICKY;
     }
 
@@ -67,7 +68,8 @@ public class ForegroundService extends Service {
                 .setOngoing(true)
                 .setContentTitle("Your ip address:")
                 .setContentText(data)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_ip_app)
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(data))
                 .setContentIntent(MainActivity.getPendingIntent(getApplicationContext()))
                 .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
